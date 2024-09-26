@@ -1,12 +1,13 @@
 services:
   memos:
-    image: neosmemo/memos:stable
+    build: ./
     container_name: memos
     restart: unless-stopped
     ports:
       - 5230:5230
     volumes:
       - ~/.memos:/var/opt/memos
+    command: --instance-url https://deep.avia.bid --mode prod
 
   caddy:
     image: caddy:2.8
