@@ -1,0 +1,44 @@
+services:
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    restart: unless-stopped
+    ports:
+      - 5230:5230
+    volumes:
+      - ~/.memos:/var/opt/memos
+
+  caddy:
+    image: caddy:2.8
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 0.0.0.0:80:80/tcp
+      - 0.0.0.0:443:443
+    configs:
+      - source: Caddyfile
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - ~/.caddy/data:/data
+      - ~/.caddy/config:/config
+      - ~/.caddy/logs:/logs
+
+configs:
+  Caddyfile:
+    content: |
+      deep.avia.bid {
+        reverse_proxy memos:5230
+        log {
+          format console
+          output file /logs/memos.log {
+            roll_size 10mb
+            roll_keep 20
+            roll_keep_for 7d
+          }
+        }
+        encode {
+          zstd
+          gzip
+          minimum_length 1024
+        }
+      }
