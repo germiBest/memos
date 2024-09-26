@@ -93,7 +93,7 @@ Sitemap: %s/sitemap.xml`, instanceURL, instanceURL)
 			return err
 		}
 		for _, memo := range memoList {
-			urlsets = append(urlsets, fmt.Sprintf(`<url><loc>%s</loc></url>`, fmt.Sprintf("%s/m/%d", instanceURL, memo.ID)))
+			urlsets = append(urlsets, fmt.Sprintf(`<url><loc>%s</loc></url>`, fmt.Sprintf("%s/m/%s", instanceURL, memo.UID)))
 		}
 		// Append user list.
 		userList, err := s.Store.ListUsers(ctx, &store.FindUser{})
